@@ -76,7 +76,7 @@ export default function Register() {
           </div>
           <div className="form-group">
             <label className="form-label">Organization Name *</label>
-            <input id="org-name" className="form-input" value={form.organizationName} onChange={e => set('organizationName', e.target.value)} placeholder="Acme Corp" required />
+            <input id="org-name" className="form-input" value={form.organizationName} onChange={e => set('organizationName', e.target.value)} placeholder="NIT-T" required />
           </div>
           <div className="form-group">
             <label className="form-label">Password *</label>

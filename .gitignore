@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+backend/dist/
+frontend/dist/
+
+# Environment files (NEVER commit these)
+.env
+backend/.env
+frontend/.env
+
+# Prisma generated client (regenerated on build)
+backend/node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker volumes / override files
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/

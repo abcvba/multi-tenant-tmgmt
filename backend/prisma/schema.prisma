@@ -1,0 +1,76 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  users     User[]
+  tasks     Task[]
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  password       String?
+  name           String?
+  googleId       String?      @unique
+  avatarUrl      String?
+  role           Role         @default(MEMBER)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdTasks   Task[]       @relation("TaskCreator")
+  assignedTasks  Task[]       @relation("TaskAssignee")
+  auditLogs      AuditLog[]
+  createdAt      DateTime     @default(now())
+}
+
+model Task {
+  id             String       @id @default(uuid())
+  title          String
+  description    String?
+  status         String       @default("TODO")
+  priority       Priority     @default(MEDIUM)
+  dueDate        DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  creatorId      String
+  creator        User         @relation("TaskCreator", fields: [creatorId], references: [id])
+  assigneeId     String?
+  assignee       User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  auditLogs      AuditLog[]   @relation("TaskAuditLogs")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  entity    String
+  entityId  String
+  details   Json?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  taskId    String?
+  task      Task?    @relation("TaskAuditLogs", fields: [taskId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
